@@ -13,8 +13,12 @@ function ReceiptEdit(props) {
     // Data 
     const [receiptTotal, setReceiptTotal] = useState(35.00);
 
-    // TODO: enable and integrate scanner output with date
-    // const [scannerOutput, setScannerOutput] = useState(props.receiptData.items.receipt)
+    const [items, setItems] = useState(props.receiptData.items);
+
+    const createNewItem = () => {
+        const newItem = { id: getNextItemId(), name: 'Name', price: 0.0, amount: 0 }
+        setItems([...items, newItem]);
+    }
 
     const getParsedItems = () =>  {
         const items = [

@@ -21,6 +21,8 @@ function Scanner() {
 
             console.log('Server response:', imageResponse.data);
 
+            console.log(imageResponse)
+
             setReceiptData({ imageBlob: imageBlob, items: imageResponse.data })
         } catch (error) {
             console.error('Error:', error.message);
