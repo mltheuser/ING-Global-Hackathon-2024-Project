@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import CurrencyInput from 'react-currency-input-field';
 import './ReceiptEdit.css';
 
 function ReceiptEdit(props) {
@@ -32,7 +33,7 @@ function ReceiptEdit(props) {
     };
     // Validity check input data
     const isValidItem = (item) => {
-        return (item.amount * item.price).toFixed(2) === item.totalPrice.toFixed(2);
+        return Number(item.amount * item.price).toFixed(2) === item.totalPrice;
     }
     
     const isValidTotal = () => {
@@ -58,7 +59,7 @@ function ReceiptEdit(props) {
                 )
             );
         }
-        if (field == 'price' || field == 'totalPrice' || field == 'amount') {
+        if (field == 'price' || field == 'totalPrice' || field == 'amount' || field == 'name') {
             updateField(id, field, value)
         } else {
             console.error("Bad field");
@@ -75,6 +76,7 @@ function ReceiptEdit(props) {
     const calculateItemTotal = (amount, price) => {
         return amount * price;
     };
+
     
     return (
     <div className="receipt-container">
@@ -98,36 +100,39 @@ function ReceiptEdit(props) {
                         value={item.name}
                         onChange={(e) => handleItemChange(item.id, 'name', e.target.value)}
                     />
-                    <div>
-                        <input
-                            type="number"
-                            step="0.01"
-                            value={item.price}
-                            onChange={(e) => handleItemChange(item.id, 'price', Math.max(0, parseFloat(e.target.value)))}
-                        /> 
+                    <div><CurrencyInput
+                            name="price"
+                            prefix="€"
+                            placeholder="Price per item"
+                            defaultValue={item.price}
+                            decimalScale={2}
+                            maxLength={8}
+                            onValueChange={(value, name, _) => handleItemChange(item.id, name,  Number(value).toFixed(2))}
+                        />
                         X
                         <input 
                             type="number"
                             step="1"
                             value={item.amount}
-                            onChange={(e) => handleItemChange(item.id, 'amount', Math.max(0, parseInt(e.target.value)))}
+                            onChange={(e) => handleItemChange(item.id, 'amount', Math.max(0, (e.target.value)))}
                         />
                         =
-                        <div>
-                            <input
-                                type="number"
-                                step="0.01"
-                                value={item.totalPrice}
-                                onChange={(e) => handleItemChange(item.id, 'totalPrice', Math.max(0, parseInt(e.target.value)))}
-                            />
-                            </div>
-                        </div>
+                        <CurrencyInput
+                            name="totalPrice"
+                            prefix="€"
+                            placeholder="Total amount"
+                            defaultValue={item.totalPrice}
+                            decimalScale={2}
+                            onValueChange={(value, name, _) => handleItemChange(item.id, name,  Number(value).toFixed(2))}
+                            // onValueChange={(_, name, _) => handleItemChange(item.id, name, Math.max(0, parseInt(e.target.value)))}
+                        />
                         <button onClick={() => deleteItem(item.id)}>Delete</button>
-                    </li>
-                {index !== items.length - 1 && <hr className="item-separator" />}
-                    </React.Fragment>
-            ))
-        }
+                    </div>
+
+                </li>
+            {index !== items.length - 1 && <hr className="item-separator" />}
+            </React.Fragment>            
+        ))}
         <button onClick={() => createNewItem()}>Add item</button>
         </ul>
         <div className="receipt-total">
