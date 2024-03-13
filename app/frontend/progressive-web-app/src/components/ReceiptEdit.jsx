@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import './ReceiptEdit.css';
 import Spinner from './Spinner';
+import { useParams } from "react-router-dom"
 
 function ReceiptEdit() {
     const [items, setItems] = useState([
         { id: 1, name: 'Item 1', price: 10.0, amount: 2 },
         { id: 2, name: 'Item 2', price: 15.0, amount: 1 },
     ]);
+
+    const { receiptId } = useParams();
+
+    console.log(receiptId)
 
     const handleItemChange = (id, field, value) => {
         setItems((prevItems) =>
