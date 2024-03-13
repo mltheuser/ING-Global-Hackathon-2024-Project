@@ -10,7 +10,7 @@ function ReceiptEdit(props) {
         return nextId;
     }
 
-    const [items, setItems] = useState(props.receiptData.items.receipt);
+    const [items, setItems] = useState(props.items);
 
     const createNewItem = () => {
         const newItem = { id: getNextItemId(), name: 'Name', price: 0.0, amount: 0 }

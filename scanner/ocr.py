@@ -1,7 +1,15 @@
 import xmltodict
+from transformers import pipeline
 
-def call_model(image, pipeline):
-    parsed_text = pipeline(image)
+pipe = pipeline("image-to-text", model="selvakumarcts/sk_invoice_receipts", device="mps")
+
+def call_model(image):
+    image = image.convert("RGB")
+
+    parsed_text = pipe(image)
+
+    print(parsed_text)
+
     parsed_text = parsed_text[0]['generated_text'] + "</s_receipt>"
     parsed_text = xmltodict.parse(parsed_text)
     parsed_text = parsed_text['s_receipt']

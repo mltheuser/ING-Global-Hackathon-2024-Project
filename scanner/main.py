@@ -1,14 +1,11 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from PIL import Image
-from transformers import pipeline
 import io
 import ocr
 
 app = Flask(__name__)
 CORS(app)
-
-pipe = pipeline("image-to-text", model="selvakumarcts/sk_invoice_receipts", device="mps")
 
 @app.route('/scan', methods=['POST'])
 def scan_image():
@@ -23,7 +20,11 @@ def scan_image():
         # Create a PIL Image object from the binary data
         image = Image.open(io.BytesIO(image_data))
 
-        response = ocr.call_model(image, pipe)
+        image.show()
+
+        response = ocr.call_model(image)
+
+        print(response)
 
         return jsonify(response), 200
     except Exception as e:
