@@ -134,3 +134,11 @@ h1 {
         margin-bottom: 5px;
     }
 }
+
+.receipt-items .invalid {
+    border-style: solid;
+    border-width: 2px;
+    border-color: red;
+    border-radius: 10px;
+    padding: 3px;
+}
