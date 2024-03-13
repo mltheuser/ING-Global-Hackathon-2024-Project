@@ -79,7 +79,8 @@ function ReceiptEdit(props) {
 
             const requestJSON = dataToRequestJSON(items, receiptTotal)
 
-            const imageResponse = await axios.post('http://localhost:8080/bill/generate-link', JSON.stringify(requestJSON), {
+            // todo: maybe move localhost:8000 to env file
+            const imageResponse = await axios.post('http://localhost:8000/bill/generate-link', JSON.stringify(requestJSON), {
                     headers: {
                         'Content-Type': 'application/json'
                     }
