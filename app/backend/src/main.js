@@ -1,8 +1,12 @@
 const express = require('express');
 const uuid = require('uuid');
 const app = express();
+const cors = require('cors')
+const bodyParser = require('body-parser');
 
 app.use(express.json());
+app.use(cors())
+app.use(bodyParser.json());
 
 
 class Item {
@@ -69,14 +73,11 @@ app.get('/bill/get/:bill_uuid', (req, res) => {
   res.json({ bill:  db.get(bill_uuid)});
 });
 
-
 app.post('/bill/generate-link', (req, res) => {
   const bill_uuid = uuid.v4()
   const bill_json = JSON.parse(JSON.stringify(req.body));
-
   const items = bill_json.bill;
   const total = bill_json.total;
-
   var items_list = [];
 
   items.forEach(item => {
@@ -84,8 +85,6 @@ app.post('/bill/generate-link', (req, res) => {
   });
 
   const new_bill = new Bill(items_list, total)
-
-  console.log(new_bill.total);
 
   db.set(bill_uuid, new_bill);
   res.json({ uuid: bill_uuid });
@@ -96,7 +95,7 @@ app.put('/bill/:bill_uuid/settle', (req, res) => {
   res.sendStatus(200);
 })
 
-const port = process.env.PORT || 6000;
+const port = process.env.PORT || 8080;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
