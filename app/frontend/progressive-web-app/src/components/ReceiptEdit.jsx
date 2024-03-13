@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './ReceiptEdit.css';
 import Spinner from './Spinner';
+import { useParams } from "react-router-dom"
 
 function ReceiptEdit() {
 
@@ -16,8 +17,7 @@ function ReceiptEdit() {
         { id: 1, name: 'Item 2', price: 15.0, amount: 1 },
     ]);
 
-
-    const createNewItem = () => {
+const createNewItem = () => {
         const newItem = { id: getNextItemId(), name: 'Name', price: 0.0, amount:0 }
         setItems([...items, newItem]);
     }
