@@ -1,8 +1,12 @@
 const express = require('express');
 const uuid = require('uuid');
 const app = express();
+const cors = require('cors')
+const bodyParser = require('body-parser');
 
 app.use(express.json());
+app.use(cors())
+app.use(bodyParser.json());
 
 
 class Item {
@@ -109,7 +113,6 @@ app.get('/bill/:bill_uuid/get', (req, res) => {
   }
   res.status(200).json({ "bill": db.get(bill_uuid).jsonify() });
 });
-
 
 app.post('/bill/generate-link', (req, res) => {
   const bill_uuid = uuid.v4()

@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import CurrencyInput from 'react-currency-input-field';
 import './ReceiptEdit.css';
+import axios from "axios";
 
 function ReceiptEdit(props) {
-    
     // Data 
     const [receiptTotal, setReceiptTotal] = useState(35.00);
 
-    const [items, setItems] = useState(props.receiptData.items);
-
+    // const [items, setItems] = useState(props.receiptData.items);
+    const [items, setItems] = useState([
+        { id: 1, name: 'Item 1', amount: 1, price: 10.0, totalPrice: 2 },
+        { id: 2, name: 'Item 2', amount: 2, price: 15.0, totalPrice: 1 },
+    ]);
     // Utils
     const calculateTotal = () => {
         return items.reduce((total, item) => total + item.price * item.amount, 0);
@@ -47,7 +50,45 @@ function ReceiptEdit(props) {
             console.error("Bad field");
         }
     }
-                        
+
+    // TODO: don't hardcode backend address
+    async function checkout() {
+        const dataToRequestJSON = (requestItems, total) => {
+            const bills = []
+            for (const item of requestItems) {
+                const new_item = {
+                    "id": item.id, 
+                    "name": item.name, 
+                    "price": item.price, 
+                    "amount": item.amount, 
+                    "totalPrice": item.totalPrice
+                }
+                bills.push(new_item)
+            }
+            console.log(bills)
+            return {
+                "bill": bills, 
+                "total": total
+            }
+        }
+
+        const requestJSON = dataToRequestJSON(items, receiptTotal)
+
+        var data = new FormData()
+        const jsondata = {"bill": [{"id": 1, "name": "donuts", "price": 3.0, "amount": 2, "total_price": 9.0}], "total": 20}
+        data.append("json", JSON.stringify(jsondata))
+        // JSON.stringify( '{"bill": [{"id": 1, "name": "donuts", "price": 3.0, "amount": 2, "total_price": 9.0}], "total": 20}' )
+
+
+        const imageResponse = await axios.post('http://localhost:8080/bill/generate-link', JSON.stringify(jsondata), {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        )
+        console.log(imageResponse)
+        console.log(imageResponse.json())
+    }
                         
     const [isImageExpanded, setIsImageExpanded] = useState(false);
                         
@@ -115,7 +156,7 @@ function ReceiptEdit(props) {
             <span className="total-label">Total:</span>
             <span className="total-amount">${calculateTotal().toFixed(2)}</span>
         </div>
-        <button className="checkout-button">Share</button>
+        <button onClick={() => checkout()} className="checkout-button">Share</button>
     </div>
     );
 }
