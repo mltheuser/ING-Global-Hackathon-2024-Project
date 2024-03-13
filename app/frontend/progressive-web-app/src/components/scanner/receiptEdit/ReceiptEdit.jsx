@@ -52,42 +52,44 @@ function ReceiptEdit(props) {
     }
 
     // TODO: don't hardcode backend address
+    const [checkedOut, setCheckedOut] = useState(false)
+    const [sharingLink, setSharingLink] = useState(null)
     async function checkout() {
-        const dataToRequestJSON = (requestItems, total) => {
-            const bills = []
-            for (const item of requestItems) {
-                const new_item = {
-                    "id": item.id, 
-                    "name": item.name, 
-                    "price": item.price, 
-                    "amount": item.amount, 
-                    "totalPrice": item.totalPrice
+        if (!(checkedOut)) {
+            setCheckedOut(() => true)
+
+            const dataToRequestJSON = (requestItems, total) => {
+                const bills = []
+                for (const item of requestItems) {
+                    const new_item = {
+                        "id": item.id, 
+                        "name": item.name, 
+                        "price": item.price, 
+                        "amount": item.amount, 
+                        "totalPrice": item.totalPrice
+                    }
+                    bills.push(new_item)
                 }
-                bills.push(new_item)
+                console.log(bills)
+                return {
+                    "bill": bills, 
+                    "total": total
+                }
             }
-            console.log(bills)
-            return {
-                "bill": bills, 
-                "total": total
-            }
+
+            const requestJSON = dataToRequestJSON(items, receiptTotal)
+
+            const imageResponse = await axios.post('http://localhost:8080/bill/generate-link', JSON.stringify(requestJSON), {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            )
+            console.log("Backend responded with status " + imageResponse.status)
+            const uuid = imageResponse.data.uuid
+            console.log("Receipt saved under uuid " + uuid)
+            setSharingLink(() => uuid)
         }
-
-        const requestJSON = dataToRequestJSON(items, receiptTotal)
-
-        var data = new FormData()
-        const jsondata = {"bill": [{"id": 1, "name": "donuts", "price": 3.0, "amount": 2, "total_price": 9.0}], "total": 20}
-        data.append("json", JSON.stringify(jsondata))
-        // JSON.stringify( '{"bill": [{"id": 1, "name": "donuts", "price": 3.0, "amount": 2, "total_price": 9.0}], "total": 20}' )
-
-
-        const imageResponse = await axios.post('http://localhost:8080/bill/generate-link', JSON.stringify(jsondata), {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-        )
-        console.log(imageResponse)
-        console.log(imageResponse.json())
     }
                         
     const [isImageExpanded, setIsImageExpanded] = useState(false);
@@ -100,7 +102,7 @@ function ReceiptEdit(props) {
         return amount * price;
     };
 
-    
+    if (sharingLink == null) {
     return (
     <div className="receipt-container">
         <h1>Digital Receipt</h1>
@@ -159,6 +161,11 @@ function ReceiptEdit(props) {
         <button onClick={() => checkout()} className="checkout-button">Share</button>
     </div>
     );
+    } else {
+        return <div>
+            Share the following link: '{sharingLink}'
+        </div>
+    }
 }
 
 export default ReceiptEdit;
