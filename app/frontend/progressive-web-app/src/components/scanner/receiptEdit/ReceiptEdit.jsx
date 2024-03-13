@@ -2,32 +2,37 @@ import React, { useState } from 'react';
 import './ReceiptEdit.css';
 
 function ReceiptEdit(props) {
-     // Data 
-    const getParsedItems = () =>  {
-        console.log("Received scanner-output: " + scannerOutput)
-        console.log("Sending back mock data")
-        return [
-            { id: getNextItemId(), name: 'donuts', price: 3.0, amount:2, totalPrice: 9.0},
-            { id: getNextItemId(), name: 'beer 0.0', price: 2.5, amount:5, totalPrice: 12.5}
-        ]
-    }
-    
-    const [receiptTotal, setReceiptTotal] = useState(35.00);
-    const [scannerOutput, setScannerOutput] = useState(props.receiptData.items.receipt)
-    const [items, setItems] = useState(getParsedItems())
-    const [prevId, setPrevId] = useState(2)
+    // Utils
+    const [prevId, setPrevId] = useState(0)
     const getNextItemId = () => {
         const nextId = prevId + 1;
         setPrevId(() => nextId);
         return nextId;
     }
+    
+    // Data 
+    const [receiptTotal, setReceiptTotal] = useState(35.00);
+
+    // TODO: enable and integrate scanner output with date
+    // const [scannerOutput, setScannerOutput] = useState(props.receiptData.items.receipt)
+
+    const getParsedItems = () =>  {
+        const items = [
+            { id: prevId + 1, name: 'donuts', price: 3.0, amount:2, totalPrice: 9.0},
+            { id: prevId + 2, name: 'beer 0.0', price: 2.5, amount:5, totalPrice: 12.5}
+        ]
+        setPrevId(prevId + 2)
+        return items
+    }
+    const [items, setItems] = useState(getParsedItems)
+
     // Utils
     const calculateTotal = () => {
         return items.reduce((total, item) => total + item.price * item.amount, 0);
     };
     // Validity check input data
     const isValidItem = (item) => {
-        return item.amount * item.price == item.totalPrice;
+        return (item.amount * item.price).toFixed(2) === item.totalPrice.toFixed(2);
     }
     
     const isValidTotal = () => {
@@ -46,26 +51,15 @@ function ReceiptEdit(props) {
     }
 
     const handleItemChange = (id, field, value) => { 
-        if (field == 'price') {
+        const updateField = (id, field, value) => {
             setItems(
-                (prevItems) => prevItems.map(
-                     (item) =>
-                      item.id === id ? { ...item, ['price']: value} : item
-                      )
-            );
-        } else if (field == 'totalPrice') {
-            setItems(
-                (prevItems) => prevItems.map(
-                    (item) => item.id === id ? { ...item, ['totalPrice']: value} : item
+                () => items.map(
+                     (item) => item.id === id ? { ...item, [field]: value} : item
                 )
             );
-        } else if (field == 'amount'){
-            setItems(
-                (prevItems) => prevItems.map(
-                    (item) => item.id === id ? { ...item, ['amount']: value} : item
-                )
-            );
-                            
+        }
+        if (field == 'price' || field == 'totalPrice' || field == 'amount') {
+            updateField(id, field, value)
         } else {
             console.error("Bad field");
         }
@@ -89,8 +83,7 @@ function ReceiptEdit(props) {
             <img src="https://discuss.poynt.net/uploads/default/original/2X/6/60c4199364474569561cba359d486e6c69ae8cba.jpeg" alt="Original Receipt" className="original-receipt" />
             <div className="expand-icon">&#x2922;</div>
         </div>
-        
-        <ul cassName="receipt-items">
+        <ul className="receipt-items">
             <li>
                 <b>Item name</b>
                 <b>Amount</b>
@@ -115,12 +108,15 @@ function ReceiptEdit(props) {
                         X
                         <input 
                             type="number"
+                            step="1"
                             value={item.amount}
                             onChange={(e) => handleItemChange(item.id, 'amount', Math.max(0, parseInt(e.target.value)))}
                         />
+                        =
                         <div>
                             <input
                                 type="number"
+                                step="0.01"
                                 value={item.totalPrice}
                                 onChange={(e) => handleItemChange(item.id, 'totalPrice', Math.max(0, parseInt(e.target.value)))}
                             />
