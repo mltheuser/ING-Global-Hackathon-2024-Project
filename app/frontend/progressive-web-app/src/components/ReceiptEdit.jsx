@@ -4,6 +4,12 @@ import Spinner from './Spinner';
 
 function ReceiptEdit() {
 
+    const [prevId, setPrevId] = useState(2)
+    const getNextItemId = () => {
+        const nextId = prevId + 1;
+        setPrevId(() => nextId);
+        return nextId;
+    }
 
     const [items, setItems] = useState([
         { id: 0, name: 'Item 1', price: 10.0, amount: 2 },
@@ -12,8 +18,13 @@ function ReceiptEdit() {
 
 
     const createNewItem = () => {
-        const newItem = { id: items.length, name: 'Name', price: 0.0, amount:0 }
+        const newItem = { id: getNextItemId(), name: 'Name', price: 0.0, amount:0 }
         setItems([...items, newItem]);
+    }
+
+    const deleteItem = (idToDelete) => {  
+        const newItemList = items.filter((item) => item.id !== idToDelete);
+        setItems(() => newItemList);
     }
 
     const handleItemChange = (id, field, value) => {
@@ -109,7 +120,7 @@ function ReceiptEdit() {
                                 />
                                 <input type="image" src="../lock.svg"/></div>
                             </div>
-                            <button>Delete</button>
+                            <button onClick={() => deleteItem(item.id)}>Delete</button>
                             <p>
                                 
                                     </p>
