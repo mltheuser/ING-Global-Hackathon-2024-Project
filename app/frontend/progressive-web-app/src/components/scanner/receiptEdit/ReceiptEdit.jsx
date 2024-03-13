@@ -2,33 +2,11 @@ import React, { useState } from 'react';
 import './ReceiptEdit.css';
 
 function ReceiptEdit(props) {
-    // Utils
-    const [prevId, setPrevId] = useState(0)
-    const getNextItemId = () => {
-        const nextId = prevId + 1;
-        setPrevId(() => nextId);
-        return nextId;
-    }
     
     // Data 
     const [receiptTotal, setReceiptTotal] = useState(35.00);
 
     const [items, setItems] = useState(props.receiptData.items);
-
-    const createNewItem = () => {
-        const newItem = { id: getNextItemId(), name: 'Name', price: 0.0, amount: 0 }
-        setItems([...items, newItem]);
-    }
-
-    const getParsedItems = () =>  {
-        const items = [
-            { id: prevId + 1, name: 'donuts', price: 3.0, amount:2, totalPrice: 9.0},
-            { id: prevId + 2, name: 'beer 0.0', price: 2.5, amount:5, totalPrice: 12.5}
-        ]
-        setPrevId(prevId + 2)
-        return items
-    }
-    const [items, setItems] = useState(getParsedItems)
 
     // Utils
     const calculateTotal = () => {
@@ -45,7 +23,7 @@ function ReceiptEdit(props) {
     }
     // Item
     const createNewItem = () => { 
-        const newItem = { id: getNextItemId(), name: 'Name', price: 0.0, amount:0, totalPrice: 0.0, lockedAmount: false }
+        const newItem = { name: 'Name', price: 0.0, amount:0, totalPrice: 0.0, lockedAmount: false }
         setItems([...items, newItem]);
     }
     
@@ -88,12 +66,6 @@ function ReceiptEdit(props) {
             <div className="expand-icon">&#x2922;</div>
         </div>
         <ul className="receipt-items">
-            <li>
-                <b>Item name</b>
-                <b>Amount</b>
-                <b>Quantity</b>
-            </li>
-            
             {items && items.map((item, index) => (
             <React.Fragment key={index}>
                 <li className={isValidItem(item) ? '' : 'invalid'}>

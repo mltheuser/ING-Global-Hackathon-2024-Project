@@ -23,7 +23,7 @@ function Scanner() {
 
             console.log(imageResponse)
 
-            setReceiptData({ imageBlob: imageBlob, items: imageResponse.data })
+            setReceiptData({ imageBlob: imageBlob, items: imageResponse.data.items })
         } catch (error) {
             console.error('Error:', error.message);
         } finally {
