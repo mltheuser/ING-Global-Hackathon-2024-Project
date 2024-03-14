@@ -34,20 +34,19 @@ function Scanner() {
     if (isLoading) {
         return (
             <>
+                <Snap parseReceiptImageOnServerAction={parseReceiptImageOnServer} isLoading={isLoading}/>
                 <Spinner />
-                <Snap parseReceiptImageOnServerAction={parseReceiptImageOnServer} />
             </>
         )
-    }
+    }   
     if (receiptData) {
         return <>
             <ReceiptEdit receiptData={receiptData} />
         </>
     }
     return (
-        <Snap parseReceiptImageOnServerAction={parseReceiptImageOnServer} />
+        <Snap parseReceiptImageOnServerAction={parseReceiptImageOnServer} isLoading={isLoading}/>
     )
-
 }
 
 export default Scanner;

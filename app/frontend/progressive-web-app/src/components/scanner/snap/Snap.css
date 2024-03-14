@@ -41,6 +41,10 @@ body {
     /* 16:9 aspect ratio of the webcam video */
 }
 
+.camera-container.blurred {
+    filter: blur(5px);
+}
+
 .camera-container video,
 .camera-container canvas {
     position: absolute;
