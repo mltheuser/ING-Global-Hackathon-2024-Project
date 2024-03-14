@@ -2,14 +2,16 @@ import React, { useEffect, useState } from "react";
 import './Settle.css';
 import ReceiptItem from "../receiptitem/ReceiptItem";
 import axios from "axios";
-import { useParams } from "react-router";
+import { useParams } from 'react-router-dom';
 
 function Settle() {
-    const params = useParams();
-    const [receiptData, setReceiptData] = useState([]);
 
+    const { receiptId } = useParams();
+
+    const [receiptData, setReceiptData] = useState([])
     async function loadReceiptData() {
-        const res = await axios.get("http://localhost:8000/bill/"+params.receiptId+"/get");
+        const res = await axios.get("http://localhost:8000/bill/" + receiptId + "/get");
+
         const bill = JSON.parse(JSON.stringify(res.data.bill))
         var receiptData = bill.items.map((item) => {
             return {
@@ -21,22 +23,10 @@ function Settle() {
         })
         setReceiptData(receiptData)
     }
-    
+
     useEffect(() => {
         loadReceiptData()
     }, []);
-
-    async function put_request(path, json_data) {
-        var data = new FormData()
-        data.append("json", JSON.stringify(json_data))
-    
-        const response = await axios.put(path, JSON.stringify(json_data), {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-        )
-    }
 
     const options = { forceIsCustomContribution: false };
 
@@ -54,21 +44,20 @@ function Settle() {
     }, [itemStates]);
 
 
-    const calculateTotalCost = () => {
+    const calculateTotalCost = (itemStates) => {
         var totalContributionSum = 0
-        for (const [index, state] of Object.entries(itemStates)) {
+        for (const [_, state] of Object.entries(itemStates)) {
             totalContributionSum += state.currentContribution
         }
         return Number(totalContributionSum).toFixed(2)
     }
 
-    const checkout = () => {
-        for (const [index, state] of Object.entries(itemStates)) {
-            console.log(index + "-" + state)
-            var receipt = receiptData[index]
-            console.log(state.current)
-            console.log(state.currentContribution)
-        }
+    function checkout() {
+        axios.put("http://localhost:8000/bill/"+ receiptId +"/settle", JSON.stringify(itemStates), {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
     }
 
     return (
@@ -76,22 +65,22 @@ function Settle() {
             <h1>Settle the Score</h1>
             <div className="receipt-container">
                 <ul className="receipt-items">
-                    { receiptData.map((item, index) => (
-                            <li key={index}>
-                                <ReceiptItem
-                                    item={item}
-                                    options={options}
-                                    onStateChange={(state) => handleItemStateChange(index, state)}
-                                />
-                            </li>
-                        ))}
+                    {receiptData.map((item, index) => (
+                        <li key={index}>
+                            <ReceiptItem
+                                item={item}
+                                options={options}
+                                onStateChange={(state) => handleItemStateChange(index, state)}
+                            />
+                        </li>
+                    ))}
                 </ul>
-            </div> 
+            </div>
             <div className="receipt-total">
                 <span className="total-label">Total:</span>
-                <span className="total-amount">${calculateTotalCost()}</span>    
+                <span className="total-amount">{calculateTotalCost(itemStates)}</span>
             </div>
-            <button onClick={() => checkout()} className="pay">Share</button>
+            <button onClick={() => checkout()} className="pay">Checkout</button>
         </div>
     );
 }

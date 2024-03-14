@@ -82,7 +82,7 @@ const ReceiptItem = ({ item, options, onStateChange }) => {
                             maxLength={8}
                             onValueChange={(value, name, _) => {
                                 setCurrentContribution(value)
-                                onStateChange({ current: current, currentContribution: value });
+                                onStateChange({ current: current, currentContribution: Number(value) });
                             }}
                         />
                         <span className="info-icon">&#9432;</span>
