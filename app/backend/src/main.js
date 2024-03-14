@@ -1,8 +1,12 @@
 const express = require('express');
 const uuid = require('uuid');
 const app = express();
+const cors = require('cors')
+const bodyParser = require('body-parser');
 
 app.use(express.json());
+app.use(cors())
+app.use(bodyParser.json());
 
 
 class Item {
@@ -110,10 +114,10 @@ app.get('/bill/:bill_uuid/get', (req, res) => {
   res.status(200).json({ "bill": db.get(bill_uuid).jsonify() });
 });
 
-
 app.post('/bill/generate-link', (req, res) => {
   const bill_uuid = uuid.v4()
   const bill_json = JSON.parse(JSON.stringify(req.body));
+
 
   if (db.has(bill_uuid)) {
     res.status(400).json({ error: "Bill_uuid " + bill_uuid + " already exists."});
@@ -128,6 +132,7 @@ app.post('/bill/generate-link', (req, res) => {
   items.forEach(item => {
     items_map.set(item.id, new Item(item.id, item.name, item.price, item.amount, item.total_price));
   });
+
 
   const new_bill = new Bill(items_map, total);
 
@@ -161,6 +166,7 @@ app.put('/bill/:bill_uuid/settle', (req, res) => {
   db.set(bill_uuid, bill);
   res.status(200).json({message:"Bill " + bill_uuid + " settled successfully."});
 })
+
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => {

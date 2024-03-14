@@ -22,11 +22,13 @@ def scan_image():
 
         image.show()
 
-        response = ocr.call_model(image)
+        # response = ocr.call_model(image)
 
-        print(response)
-
-        return jsonify(response), 200
+        return jsonify({
+            "items": [
+                {"name": "Test", "amount": 2, "totalPrice": 20.5}
+            ]
+        }), 200
     except Exception as e:
         print(str(e))
         return jsonify({'error': str(e)}), 400
