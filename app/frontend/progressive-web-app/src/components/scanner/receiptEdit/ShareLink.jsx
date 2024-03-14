@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import INGLogo from '../../../icons/ING_Identifier_FC_Tagline_Orange.png'
+
 import {
     WhatsappShareButton,
     TelegramShareButton,
@@ -21,14 +23,14 @@ import {
     // ViberShareButton,
     // VKShareButton,
     // WorkplaceShareButton,
-  } from "react-share";
-  import {
+} from "react-share";
+import {
     EmailIcon,
     FacebookMessengerIcon,
     LinkedinIcon,
     TelegramIcon,
     WhatsappIcon,
-  } from "react-share";
+} from "react-share";
 
 import './ShareLink.css';
 import { BsCopy } from "react-icons/bs";
@@ -45,7 +47,7 @@ function ShareLink(props) {
     const getShareOneliner = () => {
         return "Hi there, sharing the link to settle our latest expenses. Please click here to make your payment: " + getLink() + ". Thanks!"
     }
-    
+
 
     const getTitle = () => {
         "Settlement payment required"
@@ -56,7 +58,7 @@ function ShareLink(props) {
         navigator.clipboard.writeText(getLink())
         setLinkCopied(true)
     }
-  
+
     const [linkCopied, setLinkCopied] = useState(() => false);
     const getCopyButtonText = () => {
         if (linkCopied) {
@@ -68,9 +70,10 @@ function ShareLink(props) {
     return (
         <div className='share-link'>
             <div className="link">
-                <h3>Share the following link: </h3>
+                <h3 className="header">Share the following link: </h3>
                 <button className="copy-link" onClick={copyLink}>
-                <BsCopy />{getCopyButtonText()}
+                        <BsCopy />
+                        <text className={`${linkCopied ? 'not-copied' : 'copied'}`}>{getCopyButtonText()}</text>
                 </button>
             </div>
 
@@ -107,23 +110,24 @@ function ShareLink(props) {
                 </div>
 
                 <div className="share Demo__some-network">
-                    <LinkedinShareButton 
-                        url={getLink()} 
+                    <LinkedinShareButton
+                        url={getLink()}
                         className="Demo__some-network__share-button">
-                    <LinkedinIcon size={32} round />
+                        <LinkedinIcon size={32} round />
                     </LinkedinShareButton>
                 </div>
                 <div className="share Demo__some-network">
                     <TelegramShareButton
-                    url={getShareOneliner()}
-                    title={getTitle()}
-                    className="Demo__some-network__share-button"
+                        url={getShareOneliner()}
+                        title={getTitle()}
+                        className="Demo__some-network__share-button"
                     >
-                    <TelegramIcon size={32} round />
+                        <TelegramIcon size={32} round />
                     </TelegramShareButton>
                 </div>
-          </div>
-    </div>
+            </div>
+            <img className="INGLogo" src={INGLogo} alt="ING Logo" />
+        </div>
     )
 }
 
