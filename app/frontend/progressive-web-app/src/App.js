@@ -1,3 +1,4 @@
+import Settle from "./components/contributions/settle/Settle";
 import Scanner from "./components/scanner/Scanner";
 import ReceiptEdit from "./components/scanner/receiptEdit/ReceiptEdit";
 import ConsumptionOverview from "./components/consumption/ConsumptionOverview";
@@ -9,7 +10,8 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route index element={<Scanner />} />
-        <Route path="contribute/:receiptId" element={<ReceiptEdit />} />
+        <Route path="edit/:receiptId" element={<ReceiptEdit />} />
+        <Route path="contribute/:receiptId" element={<Settle />} />
       </Routes>
     </BrowserRouter>
   );
