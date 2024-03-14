@@ -9,7 +9,7 @@ function App() {
       <Routes>
         <Route index element={<Scanner />} />
         <Route path="edit/:receiptId" element={<ReceiptEdit />} />
-        <Route path="contribute/" element={<Settle />} />
+        <Route path="contribute/:receiptId" element={<Settle />} />
       </Routes>
     </BrowserRouter>
   );

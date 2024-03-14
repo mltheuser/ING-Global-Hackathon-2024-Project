@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { useParams} from "react-router";
 import './Settle.css';
 import axios from "axios";
 import CurrencyInput from 'react-currency-input-field';
+import ReceiptItem from "../../contributions/receiptitem/ReceiptItem";
 
 
 async function put_request(path, json_data) {
@@ -19,7 +21,7 @@ async function put_request(path, json_data) {
 }
 
 async function get_request(path) {
-    const response = await axios.get("http://localhost:8000/bill/d4772018-334f-40a6-86e7-c5fad3db00b9/get");
+    const response = await axios.get("http://localhost:8000/bill/6229ab56-ee36-498f-9ace-3924577496fe/get");
     return response;
 }
 
@@ -28,6 +30,7 @@ function Settle() {
     const [isImageExpanded, setIsImageExpanded] = useState(false);
     const [bill, setBill] = useState("");
     const [userPays, setUserPays] = useState([]);
+    const [bill_uuid, setBillUuid] = useState("");
 
     const addNewUserItem = (id, quantity, price, unit_price) => { 
         const newUserItem = { id: id, quantity_paid: quantity, price_paid: price, unit_price: unit_price }
@@ -42,9 +45,12 @@ function Settle() {
         setIsImageExpanded(!isImageExpanded);
     };
 
+
     useEffect(() => {
-        get_request().then(res => {setBill(JSON.parse(JSON.stringify(res.data.bill)));});
+        get_request(bill_uuid).then(res => {setBill(JSON.parse(JSON.stringify(res.data.bill)));});
     },[]);
+
+    const options = {"forceIsCustomContribution": false};
     
 
     return (
@@ -57,30 +63,20 @@ function Settle() {
         <ul className="receipt-items">
                 <li className="receipt-items-bold">
                     <div>Name</div>
-                    <div>Quantity</div>
                     <div>Unit price</div>
+                    <div>Quantity</div>
                     <div>Total price</div>
                     <div></div>
                 </li>
             {bill != "" && bill.items.map((item, index) => (
-            <React.Fragment key={index}>
-                <li>
-                    <div>{item.name}</div>
-                    <div>{Math.max(item.quantity - item.quantity_paid,0)}</div>
-                    <div>{item.unit_price}</div>
-                    <div>{item.total_price}</div>
-                    {(item.quantity - item.quantity_paid > 0) && <button onClick={() => {addNewUserItem(item.id,1,0, item.unit_price)}}>Pay</button>}
-                </li>
-            {index !== bill.items.length - 1 && <hr className="item-separator" />}
-            </React.Fragment>            
+                <ReceiptItem item={item} options={options}/>      
         ))}
         </ul>
         <div className="receipt-total">
             <span className="total-label">Total to pay:</span>
             <span className="total-amount">${calculateTotal().toFixed(2)}</span>
         </div>
-        <button className="checkout-button" onClick={() => {put_request("http://localhost:8000/bill/d4772018-334f-40a6-86e7-c5fad3db00b9/settle", {"changes": userPays})
-                                                            get_request().then(res => {setBill(JSON.parse(JSON.stringify(res.data.bill)));});}}>Settle</button>
+        <button className="checkout-button" onClick={() => {put_request("http://localhost:8000/bill/bab65d87-84a9-4778-b541-5df8223ea79d/settle", {"changes": userPays});}}>Settle</button>
     </div>
     );
 }
