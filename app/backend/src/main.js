@@ -11,13 +11,13 @@ app.use(bodyParser.json());
 
 class Item {
   constructor(id, name, quantity, unit_price, total_price) {
-      this._id = id;
-      this._name = name;
-      this._quantiy = quantity;
-      this._unit_price = unit_price;
-      this._total_price = total_price;
-      this._price_paid = 0;
-      this._quantity_paid = 0;
+    this._id = id;
+    this._name = name;
+    this._quantiy = quantity;
+    this._unit_price = unit_price;
+    this._total_price = total_price;
+    this._price_paid = 0;
+    this._quantity_paid = 0;
   }
 
   get id() {
@@ -49,13 +49,13 @@ class Item {
   }
 
   get isFullyPaid() {
-      return this._price_paid == this._total_price;
+    return this._price_paid == this._total_price;
   }
 
   get isFullyPaid() {
     return (this._price_paid == this._total_price) ||
-      (this._quantity_paid == this._quantiy) ;
-}
+      (this._quantity_paid == this._quantiy);
+  }
 
   setQuantityPaid(quantity) {
     this._quantity_paid += quantity;
@@ -66,24 +66,26 @@ class Item {
   }
 
   jsonify() {
-    return {"id" : this._id, "name": this._name, "amount" : this._quantiy, "unit_price" : this._unit_price, "totalPrice" : this._total_price,
-          "price_paid": this._price_paid, "quantity_paid": this._quantity_paid};
+    return {
+      "id": this._id, "name": this._name, "amount": this._quantiy, "unit_price": this._unit_price, "totalPrice": this._total_price,
+      "price_paid": this._price_paid, "quantity_paid": this._quantity_paid
+    };
   }
 }
 
 class Bill {
   constructor(items, total) {
-      this._items = items;
-      this._total = total;
+    this._items = items;
+    this._total = total;
   }
 
   get items() {
-      return this._items;
+    return this._items;
   }
 
   get total() {
     return this._total;
-}
+  }
 
   getItem(id) {
     return this._items.get(id);
@@ -96,22 +98,22 @@ class Bill {
   jsonify() {
     var item_jsons = []
     this._items.forEach(item => item_jsons.push(item.jsonify()));
-    return { "items" : item_jsons, "total" : this._total};
+    return { "items": item_jsons, "total": this._total };
   }
 }
-
-//sample = {id: 1, name: 'donuts', price: 3.0, amount: 2, totalPrice: 9.0} 
-
 const db = new Map();
+
+db.set("cf087d8a-7504-480e-a4ba-ccc873f5d1e7", { bill: { items: [{ name: "name", amount: 2, totalPrice: 12.5 }, { name: "name2", amount: 5, totalPrice: 22 }] } })
 
 // API endpoints
 app.get('/bill/:bill_uuid/get', (req, res) => {
   const bill_uuid = req.params.bill_uuid;
-  if (! db.has(bill_uuid)) {
-    res.status(400).json({error: "Bill_uuid " + bill_uuid + " does not exist."});
+  console.log(bill_uuid)
+  if (!db.has(bill_uuid)) {
+    res.status(400).json({ error: "Bill_uuid " + bill_uuid + " does not exist." });
     return;
   }
-  res.status(200).json({ "bill": db.get(bill_uuid).jsonify() });
+  res.status(200).json(db.get(bill_uuid));
 });
 
 app.post('/bill/generate-link', (req, res) => {
@@ -119,7 +121,7 @@ app.post('/bill/generate-link', (req, res) => {
   const bill_json = JSON.parse(JSON.stringify(req.body));
 
   if (db.has(bill_uuid)) {
-    res.status(400).json({ error: "Bill_uuid " + bill_uuid + " already exists."});
+    res.status(400).json({ error: "Bill_uuid " + bill_uuid + " already exists." });
     return;
   }
 
@@ -135,7 +137,7 @@ app.post('/bill/generate-link', (req, res) => {
   const new_bill = new Bill(items_map, total);
 
   db.set(bill_uuid, new_bill);
-  res.status(200).json({message:"Bill " + bill_uuid + " created successfully.", uuid: bill_uuid });
+  res.status(200).json({ message: "Bill " + bill_uuid + " created successfully.", uuid: bill_uuid });
 });
 
 app.put('/bill/:bill_uuid/settle', (req, res) => {
@@ -143,26 +145,39 @@ app.put('/bill/:bill_uuid/settle', (req, res) => {
 
   const bill_uuid = req.params.bill_uuid;
 
-  if (! db.has(bill_uuid)) {
-    res.status(400).json({error: "Bill_uuid " + bill_uuid + " does not exist."});
+  console.log(bill_uuid)
+
+  console.log(req.body)
+
+  if (!db.has(bill_uuid)) {
+    res.status(400).json({ error: "Bill_uuid " + bill_uuid + " does not exist." });
     return;
   }
 
-  const bill = db.get(bill_uuid);
+  const bill = db.get(bill_uuid).bill;
 
-  const changed_bill_json = JSON.parse(JSON.stringify(req.body));
-  const changes = changed_bill_json.changes;
-  
+  const updates = JSON.parse(JSON.stringify(req.body));
 
-  changes.forEach(change => {
-    const item = bill.getItem(change.id);
-    (change.quantity_paid != null) ? item.setQuantityPaid(change.quantity_paid) :
-      item.setPricePaid(change.price_paid);
-    bill.setItem(change.id, item);
+  console.log(Object.keys(updates))
+
+  console.log(bill)
+
+  Object.keys(updates).forEach(updateKey => {
+
+    const { current, currentContribution } = updates[updateKey]
+
+    bill.items[Number(updateKey)].amount -= current
+    bill.items[Number(updateKey)].totalPrice -= currentContribution
   });
 
-  db.set(bill_uuid, bill);
-  res.status(200).json({message:"Bill " + bill_uuid + " settled successfully."});
+  bill.items = bill.items.filter(value => value.totalPrice > 0)
+
+  db.set(bill_uuid, {bill: bill});
+
+  console.log(db.get(bill_uuid))
+  console.log(db.get(bill_uuid).bill.items)
+
+  res.status(200).json({ message: "Bill " + bill_uuid + " settled successfully." });
 })
 
 const port = process.env.PORT || 8000;
