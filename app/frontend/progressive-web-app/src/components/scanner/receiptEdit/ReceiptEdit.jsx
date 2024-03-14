@@ -6,13 +6,14 @@ import ShareLink from './ShareLink'
 import BackButton from '../../../icons/Chevron_left_outline_orange_RGB.png'
 import SettingsButton from '../../../icons/Large-Setting_outline_orange_RGB.png'
 import AddButton from '../../../icons/Large-Plus_outline_orange_RGB.png'
+import { useNavigate } from "react-router-dom";
 
 function ReceiptEdit(props) {
 
     // Data 
     const [receiptTotal, setReceiptTotal] = useState(35.00);
 
-    const [items, setItems] = useState(props.receiptData.items);
+    const [items, setItems] = useState([]);
 
     // Utils
     const calculateTotal = () => {
@@ -30,7 +31,7 @@ function ReceiptEdit(props) {
 
     // Item
     const createNewItem = () => {
-        const newItem = { name: 'Name', amount: 1, totalPrice: 0.0 }
+        const newItem = { name: 'Item Name', amount: 1, totalPrice: 0.0 }
         setItems([...items, newItem]);
     }
 
@@ -107,6 +108,12 @@ function ReceiptEdit(props) {
         setIsImageExpanded(!isImageExpanded);
     };
 
+    const navigate = useNavigate();
+
+    const navigateToContribute = (path) => {
+        navigate(path);
+    }
+
     const calculateItemTotal = (amount, price) => {
         return amount * price;
     };
@@ -125,14 +132,10 @@ function ReceiptEdit(props) {
                 </div>
                 <div className="receipt-container">
                     <div onClick={handleImageClick} className={`receipt-image-container ${isImageExpanded ? 'expanded' : ''}`}>
-                        <img src={props.receiptData.imageSrc} alt="Original Receipt" className="receipt-image" />
+                        <img src="" alt="Original Receipt" className="receipt-image" />
                         <div className="expand-box" />
                     </div>
                     <div className="receipt-items-holder">
-                        <div>
-                            <h1 className="receipt-title">Total amount spent: </h1>
-                            <h1 className="receipt-total-amount">25.50</h1>
-                        </div>
                         <hr className="horizontal-line" />
                         <ul className="receipt-items">
                             {items && items.map((item, index) => (
@@ -143,7 +146,7 @@ function ReceiptEdit(props) {
                                             value={item.name}
                                             onChange={(e) => handleItemChange(index, 'name', e.target.value)}
                                         />
-                                        <div><CurrencyInput
+                                        <div className='receipt-fields'><CurrencyInput
                                             name="price"
                                             prefix="€"
                                             placeholder="Price per item"
@@ -179,11 +182,11 @@ function ReceiptEdit(props) {
                             </button>
                         </ul>
                     </div>
-                    <div>
+                    <div className='receipt-footer'>
                         <span className="receipt-title">Total amount spent:</span>
-                        <span className="receipt-total-amount">${calculateTotal().toFixed(2)}</span>
+                        <span className="receipt-total-amount">€{calculateTotal().toFixed(2)}</span>
+                        <button className="share-button" onClick={() => checkout()} >Share</button>
                     </div>
-                    <button className="share-button" onClick={() => checkout()} >Share</button>
                 </div>
             </div>
         );
@@ -193,6 +196,8 @@ function ReceiptEdit(props) {
             <div className="receipt-container share-link">
                 <h1>You are almost there!</h1>
                 <ShareLink sharingLink={sharingLink} />
+                <p/>
+                <button className="share-button" onClick={() => navigateToContribute("/contribute/" + sharingLink)} >Go to receipt dashboard</button>
             </div>
         )
     }
