@@ -11,9 +11,3 @@ code {
   font-family: 'INGMe', source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-
-@font-face {
-  font-family: "INGMe";
-  src: local("INGMe"),
-   url("./fonts/INGMeCyWeb-Regular.ttf") format("truetype");
-}
