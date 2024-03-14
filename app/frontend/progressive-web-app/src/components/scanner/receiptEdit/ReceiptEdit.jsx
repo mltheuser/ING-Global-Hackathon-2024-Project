@@ -159,7 +159,7 @@ function ReceiptEdit(props) {
                     <span className="total-label">Total:</span>
                     <span className="total-amount">${calculateTotal().toFixed(2)}</span>
                 </div>
-                <button onClick={() => checkout()} className="checkout-button">Share</button>
+                <button onClick={() => checkout()} className="pay">Share</button>
             </div>
         );
     } else {

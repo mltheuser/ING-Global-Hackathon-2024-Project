@@ -21,7 +21,6 @@ const ReceiptItem = ({ item, options, onStateChange }) => {
             onStateChange({ current: current + 1, currentContribution: (current + 1) * pricePerItem });
         }
     };
-
     const handleDecrement = () => {
         if (current > 0) {
             setCurrent(current - 1);
@@ -79,7 +78,7 @@ const ReceiptItem = ({ item, options, onStateChange }) => {
                             name="contribution"
                             prefix="€"
                             defaultValue={totalPrice}
-                            decimalScale={2}
+                            fixedDecimalLength={2}
                             maxLength={8}
                             onValueChange={(value, name, _) => {
                                 setCurrentContribution(value)

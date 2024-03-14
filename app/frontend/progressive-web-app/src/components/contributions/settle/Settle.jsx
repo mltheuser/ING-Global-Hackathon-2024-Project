@@ -36,7 +36,6 @@ function Settle() {
         )
     }
 
-
     const options = { forceIsCustomContribution: false };
 
     const [itemStates, setItemStates] = useState({});
@@ -52,19 +51,45 @@ function Settle() {
         console.log("Current item states:", itemStates);
     }, [itemStates]);
 
+
+    const calculateTotalCost = () => {
+        var totalContributionSum = 0
+        for (const [index, state] of Object.entries(itemStates)) {
+            totalContributionSum += state.currentContribution
+        }
+        return Number(totalContributionSum).toFixed(2)
+    }
+
+    const checkout = () => {
+        for (const [index, state] of Object.entries(itemStates)) {
+            console.log(index + "-" + state)
+            var receipt = receiptData[index]
+            console.log(state.current)
+            console.log(state.currentContribution)
+        }
+    }
+
     return (
         <div className="receipt-container">
-            <ul className="receipt-items">
-                { receiptData.map((item, index) => (
-                        <li key={index}>
-                            <ReceiptItem
-                                item={item}
-                                options={options}
-                                onStateChange={(state) => handleItemStateChange(index, state)}
-                            />
-                        </li>
-                    ))}
-            </ul>
+            <h1>Settle the Score</h1>
+            <div className="receipt-container">
+                <ul className="receipt-items">
+                    { receiptData.map((item, index) => (
+                            <li key={index}>
+                                <ReceiptItem
+                                    item={item}
+                                    options={options}
+                                    onStateChange={(state) => handleItemStateChange(index, state)}
+                                />
+                            </li>
+                        ))}
+                </ul>
+            </div> 
+            <div className="receipt-total">
+                <span className="total-label">Total:</span>
+                <span className="total-amount">${calculateTotalCost()}</span>    
+            </div>
+            <button onClick={() => checkout()} className="pay">Share</button>
         </div>
     );
 }
