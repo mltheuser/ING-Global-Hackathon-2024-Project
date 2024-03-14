@@ -13,7 +13,7 @@ function ReceiptEdit(props) {
     // Data 
     const [receiptTotal, setReceiptTotal] = useState(35.00);
 
-    const [items, setItems] = useState([]);
+    const [items, setItems] = useState(props.receiptData.items);
 
     // Utils
     const calculateTotal = () => {
@@ -132,7 +132,7 @@ function ReceiptEdit(props) {
                 </div>
                 <div className="receipt-container">
                     <div onClick={handleImageClick} className={`receipt-image-container ${isImageExpanded ? 'expanded' : ''}`}>
-                        <img src="" alt="Original Receipt" className="receipt-image" />
+                        <img src={props.receiptData.imageSrc} alt="Original Receipt" className="receipt-image" />
                         <div className="expand-box" />
                     </div>
                     <div className="receipt-items-holder">
