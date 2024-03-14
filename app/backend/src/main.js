@@ -66,7 +66,7 @@ class Item {
   }
 
   jsonify() {
-    return {"id" : this._id, "name": this._name, "quantity" : this._quantiy, "unit_price" : this._unit_price, "total_price" : this._total_price,
+    return {"id" : this._id, "name": this._name, "amount" : this._quantiy, "unit_price" : this._unit_price, "totalPrice" : this._total_price,
           "price_paid": this._price_paid, "quantity_paid": this._quantity_paid};
   }
 }
