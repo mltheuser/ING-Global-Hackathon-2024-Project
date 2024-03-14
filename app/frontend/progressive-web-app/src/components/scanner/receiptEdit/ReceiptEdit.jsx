@@ -3,6 +3,7 @@ import CurrencyInput from 'react-currency-input-field';
 import './ReceiptEdit.css';
 import axios from "axios";
 import ShareLink from './ShareLink'
+import { IconName } from "react-icons/bs";
 
 function ReceiptEdit(props) {
     // Data 
