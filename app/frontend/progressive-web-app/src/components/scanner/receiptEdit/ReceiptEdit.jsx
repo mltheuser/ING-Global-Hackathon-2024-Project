@@ -12,11 +12,11 @@ function ReceiptEdit(props) {
 
     // Utils
     const calculateTotal = () => {
-        return items.reduce((total, item) => total + item.price * item.amount, 0);
+        return items.reduce((total, item) => total + Number(item.totalPrice), 0);
     };
     // Validity check input data
     const isValidItem = (item) => {
-        return Number(item.amount * item.price).toFixed(2) === item.totalPrice;
+        return true;
     }
 
     const isValidTotal = () => {
@@ -83,14 +83,14 @@ function ReceiptEdit(props) {
             const requestJSON = dataToRequestJSON(items, receiptTotal)
 
             // todo: maybe move localhost:8000 to env file
-            const imageResponse = await axios.post('http://localhost:8000/bill/generate-link', JSON.stringify(requestJSON), {
+            const persistActionResponse = await axios.post('http://localhost:8000/bill/generate-link', JSON.stringify(requestJSON), {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             }
             )
-            console.log("Backend responded with status " + imageResponse.status)
-            const uuid = imageResponse.data.uuid
+            console.log("Backend responded with status " + persistActionResponse.status)
+            const uuid = persistActionResponse.data.uuid
             console.log("Receipt saved under uuid " + uuid)
             setSharingLink(() => uuid)
         }
@@ -111,7 +111,7 @@ function ReceiptEdit(props) {
             <div className="receipt-container">
                 <h1>Digital Receipt</h1>
                 <div className={`receipt-image-container ${isImageExpanded ? 'expanded' : ''}`} onClick={handleImageClick}>
-                    <img src="https://discuss.poynt.net/uploads/default/original/2X/6/60c4199364474569561cba359d486e6c69ae8cba.jpeg" alt="Original Receipt" className="original-receipt" />
+                    <img src={props.receiptData.imageSrc} alt="Original Receipt" className="original-receipt" />
                     <div className="expand-icon">&#x2922;</div>
                 </div>
                 <ul className="receipt-items">
@@ -165,12 +165,13 @@ function ReceiptEdit(props) {
         );
     } else {
         return (
-        // todo: shared css here with ReceiptEdit
-        <div className="receipt-container share-link">
-            <h1>You are almost there!</h1>
-            <ShareLink sharingLink={sharingLink} />
-        </div>
-    )}
+            // todo: shared css here with ReceiptEdit
+            <div className="receipt-container share-link">
+                <h1>You are almost there!</h1>
+                <ShareLink sharingLink={sharingLink} />
+            </div>
+        )
+    }
 }
 
 export default ReceiptEdit;

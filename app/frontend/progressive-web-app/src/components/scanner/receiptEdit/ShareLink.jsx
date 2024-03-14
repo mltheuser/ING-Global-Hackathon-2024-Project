@@ -38,7 +38,7 @@ function ShareLink(props) {
 
     const getLink = () => {
         // todo: update to actual link
-        return "http://localhost:3000/hi/" + uuid + "/"
+        return "http://localhost:3000/contribute/" + uuid + "/"
     }
 
     const getShareOneliner = () => {
