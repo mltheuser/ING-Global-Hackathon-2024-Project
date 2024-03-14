@@ -124,9 +124,9 @@ function ReceiptEdit(props) {
                     </button>
                 </div>
                 <div className="receipt-container">
-                    <div className={`receipt-image-container ${isImageExpanded ? 'expanded' : ''}`}>
+                    <div onClick={handleImageClick} className={`receipt-image-container ${isImageExpanded ? 'expanded' : ''}`}>
                         <img src={props.receiptData.imageSrc} alt="Original Receipt" className="receipt-image" />
-                        <div className="expand-box" onClick={handleImageClick} />
+                        <div className="expand-box" />
                     </div>
                     <div className="receipt-items-holder">
                         <div>
