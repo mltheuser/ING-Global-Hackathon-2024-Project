@@ -3,7 +3,7 @@ import { FiMoreVertical } from 'react-icons/fi';
 import CurrencyInput from 'react-currency-input-field';
 import './ReceiptItem.css';
 
-const ReceiptItem = ({ item, options }) => {
+const ReceiptItem = ({ item, options, onStateChange }) => {
 
     const { name, amount, totalPrice } = item;
     const { forceIsCustomContribution } = options;
@@ -18,6 +18,7 @@ const ReceiptItem = ({ item, options }) => {
         if (current < amount) {
             setCurrent(current + 1)
             setCurrentContribution((current + 1) * pricePerItem)
+            onStateChange({ current: current + 1, currentContribution: (current + 1) * pricePerItem });
         }
     };
 
@@ -25,6 +26,7 @@ const ReceiptItem = ({ item, options }) => {
         if (current > 0) {
             setCurrent(current - 1);
             setCurrentContribution((current - 1) * pricePerItem)
+            onStateChange({ current: current - 1, currentContribution: (current - 1) * pricePerItem });
         }
     };
 
@@ -35,6 +37,7 @@ const ReceiptItem = ({ item, options }) => {
         setCurrent(amount)
         setCurrentContribution(totalPrice)
         setisCustomContribution(!isCustomContribution);
+        onStateChange({ current: amount, currentContribution: totalPrice });
     };
 
     return (
@@ -78,7 +81,10 @@ const ReceiptItem = ({ item, options }) => {
                             defaultValue={totalPrice}
                             decimalScale={2}
                             maxLength={8}
-                            onValueChange={(value, name, _) => setCurrentContribution(value)}
+                            onValueChange={(value, name, _) => {
+                                setCurrentContribution(value)
+                                onStateChange({ current: current, currentContribution: value });
+                            }}
                         />
                         <span className="info-icon">&#9432;</span>
                     </div>

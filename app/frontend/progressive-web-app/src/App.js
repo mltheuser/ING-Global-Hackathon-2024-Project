@@ -1,7 +1,7 @@
+import Settle from "./components/contributions/settle/Settle";
 import Scanner from "./components/scanner/Scanner";
 import ReceiptEdit from "./components/scanner/receiptEdit/ReceiptEdit";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Settle from "./components/scanner/settle/Settle";
 
 function App() {
   return (
