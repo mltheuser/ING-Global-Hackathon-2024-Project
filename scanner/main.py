@@ -16,17 +16,16 @@ def scan_image():
     image_data = request.data
 
     try:
-
         # Create a PIL Image object from the binary data
         image = Image.open(io.BytesIO(image_data))
-
-        image.show()
 
         # response = ocr.call_model(image)
 
         return jsonify({
             "items": [
-                {"name": "Test", "amount": 2, "totalPrice": 20.5}
+                {"name": "Chai Latte Tee", "amount": 1, "totalPrice": 4.50},
+                {"name": "Schokolade mit Sahne", "amount": 1, "totalPrice": 3.90},
+                {"name": "Fruhstuck", "amount": 2, "totalPrice": 30.80},
             ]
         }), 200
     except Exception as e:
