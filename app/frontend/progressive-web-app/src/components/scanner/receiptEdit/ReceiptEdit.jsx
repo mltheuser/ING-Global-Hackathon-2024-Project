@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import CurrencyInput from 'react-currency-input-field';
 import './ReceiptEdit.css';
 import axios from "axios";
+import ShareLink from './ShareLink'
 
 function ReceiptEdit(props) {
     // Data 
@@ -163,10 +164,13 @@ function ReceiptEdit(props) {
             </div>
         );
     } else {
-        return <div>
-            Share the following link: '{sharingLink}'
+        return (
+        // todo: shared css here with ReceiptEdit
+        <div className="receipt-container share-link">
+            <h1>You are almost there!</h1>
+            <ShareLink sharingLink={sharingLink} />
         </div>
-    }
+    )}
 }
 
 export default ReceiptEdit;
