@@ -9,9 +9,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route index element={<Scanner />} />
-        <Route path="contribute" element={<ReceiptEdit receiptData={{items: [{amount: 2, price: 10.25, name: "A", totalPrice: 20.50}]}}/>} />
         <Route path="contribute/:receiptId" element={<ReceiptEdit />} />
-        <Route path="consumption" element={<ConsumptionOverview />} />
       </Routes>
     </BrowserRouter>
   );

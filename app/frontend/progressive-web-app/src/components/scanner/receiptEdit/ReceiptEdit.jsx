@@ -3,7 +3,6 @@ import CurrencyInput from 'react-currency-input-field';
 import './ReceiptEdit.css';
 import axios from "axios";
 import ShareLink from './ShareLink'
-import { IconName } from "react-icons/bs";
 import BackButton from '../../../icons/Chevron_left_outline_orange_RGB.png'
 import SettingsButton from '../../../icons/Large-Setting_outline_orange_RGB.png'
 import AddButton from '../../../icons/Large-Plus_outline_orange_RGB.png'
