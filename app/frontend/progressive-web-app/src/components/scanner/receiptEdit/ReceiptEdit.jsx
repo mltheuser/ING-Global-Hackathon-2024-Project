@@ -5,6 +5,7 @@ import axios from "axios";
 import ShareLink from './ShareLink'
 import BackButton from '../../../icons/Chevron_left_outline_orange_RGB.png'
 import SettingsButton from '../../../icons/Large-Setting_outline_orange_RGB.png'
+import DeleteButton from '../../../icons/Delete_outline_orange_RGB.png'
 import AddButton from '../../../icons/Large-Plus_outline_orange_RGB.png'
 import { useNavigate } from "react-router-dom";
 
@@ -21,7 +22,7 @@ function ReceiptEdit(props) {
     };
     // Validity check input data
     const isValidItem = (item) => {
-        return true;
+        return item.name;
     }
 
     const isValidTotal = () => {
@@ -31,7 +32,7 @@ function ReceiptEdit(props) {
 
     // Item
     const createNewItem = () => {
-        const newItem = { name: 'Item Name', amount: 1, totalPrice: 0.0 }
+        const newItem = { name: '', amount: 1, totalPrice: 0.0 }
         setItems([...items, newItem]);
     }
 
@@ -82,7 +83,7 @@ function ReceiptEdit(props) {
                 console.log(bills)
                 return {
                     "bill": bills,
-                    "total": total
+                    "total": calculateTotal()
                 }
             }
 
@@ -136,26 +137,26 @@ function ReceiptEdit(props) {
                         <div className="expand-box" />
                     </div>
                     <div className="receipt-items-holder">
-                        <hr className="horizontal-line" />
                         <ul className="receipt-items">
                             {items && items.map((item, index) => (
                                 <React.Fragment key={index}>
                                     <li className={isValidItem(item) ? 'valid' : 'invalid'}>
-                                        <input
-                                            type="text"
-                                            value={item.name}
-                                            onChange={(e) => handleItemChange(index, 'name', e.target.value)}
-                                        />
-                                        <div className='receipt-fields'><CurrencyInput
-                                            name="price"
-                                            prefix="€"
-                                            placeholder="Price per item"
-                                            value={(item.totalPrice / item.amount).toFixed(2)}
-                                            decimalScale={2}
-                                            maxLength={8}
-                                            onValueChange={(value, name, _) => handleItemChange(index, "totalPrice", Number(value * item.amount).toFixed(2))}
-                                        />
-                                            X
+                                        <div className='receipt-fields'>
+                                            <input
+                                                placeholder='Item'
+                                                value={item.name}
+                                                onChange={(e) => handleItemChange(index, 'name', e.target.value)}
+                                            />
+                                            <CurrencyInput
+                                                name="price"
+                                                prefix="€"
+                                                placeholder="Price per item"
+                                                value={(item.totalPrice / item.amount).toFixed(2)}
+                                                decimalScale={2}
+                                                maxLength={8}
+                                                onValueChange={(value, name, _) => handleItemChange(index, "totalPrice", Number(value * item.amount).toFixed(2))}
+                                            />
+                                            x
                                             <input
                                                 value={item.amount}
                                                 onChange={(e) => handleItemChange(index, 'amount', e.target.value)}
@@ -170,7 +171,9 @@ function ReceiptEdit(props) {
                                                 onValueChange={(value, name, _) => handleItemChange(index, name, Number(value).toFixed(2))}
                                             // onValueChange={(_, name, _) => handleItemChange(item.id, name, Math.max(0, parseInt(e.target.value)))}
                                             />
-                                            <button onClick={() => deleteItem(index)}>Delete</button>
+                                            <button className="delete-button" onClick={() => deleteItem(index)}>
+                                                <img className="delete-icon" src={DeleteButton} alt="Delete Button" />
+                                            </button>
                                         </div>
 
                                     </li>
@@ -196,7 +199,7 @@ function ReceiptEdit(props) {
             <div className="receipt-container share-link">
                 <h1>You are almost there!</h1>
                 <ShareLink sharingLink={sharingLink} />
-                <p/>
+                <p />
                 <button className="share-button" onClick={() => navigateToContribute("/contribute/" + sharingLink)} >Go to receipt dashboard</button>
             </div>
         )

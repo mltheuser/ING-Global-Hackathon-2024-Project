@@ -23,10 +23,10 @@ def scan_image():
 
         return jsonify({
             "items": [
-                {"name": "Chai Latte Tee", "amount": 1, "totalPrice": 4.50},
-                {"name": "Schokolade mit Sahne", "amount": 1, "totalPrice": 3.90},
-                {"name": "Fruhstuck", "amount": 2, "totalPrice": 30.80},
-            ]
+                {"id": 1, "name": "Chai Latte Tee", "amount": 1, "price": 4.50, "totalPrice": 4.50},
+                {"id": 2, "name": "Schokolade mit Sahne", "amount": 1, "price": 3.90, "totalPrice": 3.90},
+                {"id": 3, "name": "Fruhstuck", "amount": 2, "price": 15.40, "totalPrice": 30.80},
+            ],
         }), 200
     except Exception as e:
         print(str(e))

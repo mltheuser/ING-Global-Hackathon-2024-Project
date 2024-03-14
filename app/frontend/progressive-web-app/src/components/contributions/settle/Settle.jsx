@@ -11,6 +11,7 @@ function Settle() {
     const [receiptData, setReceiptData] = useState([])
     async function loadReceiptData() {
         const res = await axios.get("http://localhost:8000/bill/" + receiptId + "/get");
+
         const bill = JSON.parse(JSON.stringify(res.data.bill))
         var receiptData = bill.items.map((item) => {
             return {
