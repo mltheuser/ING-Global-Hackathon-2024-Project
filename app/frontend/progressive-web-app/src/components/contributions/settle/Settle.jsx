@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import './Settle.css';
 import ReceiptItem from "../receiptitem/ReceiptItem";
 import axios from "axios";
+import { useParams } from "react-router";
 
 function Settle() {
-    const [bill_uuid, _] = useState("cf087d8a-7504-480e-a4ba-ccc873f5d1e7");
-    const [receiptData, setReceiptData] = useState([])
+    const params = useParams();
+    const [receiptData, setReceiptData] = useState([]);
+
     async function loadReceiptData() {
-        const res = await axios.get("http://localhost:8000/bill/"+bill_uuid+"/get");
+        const res = await axios.get("http://localhost:8000/bill/"+params.receiptId+"/get");
         const bill = JSON.parse(JSON.stringify(res.data.bill))
         var receiptData = bill.items.map((item) => {
             return {

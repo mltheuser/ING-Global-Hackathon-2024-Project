@@ -82,7 +82,7 @@ function ReceiptEdit(props) {
                 console.log(bills)
                 return {
                     "bill": bills,
-                    "total": total
+                    "total": calculateTotal()
                 }
             }
 
