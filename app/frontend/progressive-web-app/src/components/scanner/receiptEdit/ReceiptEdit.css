@@ -1,36 +1,135 @@
 .receipt-container {
     max-width: 600px;
-    margin: 0 auto;
+    margin: auto;
     padding: 20px;
-    background-color: #f5f5f5;
+    background-color: var(--primaryBackground);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
+.orange-header {
     text-align: center;
+    margin-bottom: 25px;
+    color: var(--primaryWhite);
+    width: 75%;
+}
+
+.receipt-title {
+    float: left;
+    margin-left: 15px;
+    margin-bottom: 5px;
+    color: var(--primaryWebText);
+    width: 50%;
+    font-style: normal;
+    font-size: 20px;
+}
+
+.receipt-total-amount {
+    float: right;
+    margin-right: 15px;
+    margin-bottom: 5px;
+    color: var(--primaryWebText);
+    width: 40%;
+    font-style: normal;
+    font-size: 20px;
+    text-align: right;
+}
+
+.header-icon {
+    display: block;
+    width: 100%;
+    filter: brightness(0) invert(1);
+}
+
+.add-icon {
+    display: block;
+    width: 100%;
+}
+
+.add-button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    position: relative;
+    width: 50px;
+    height: 50px;
+    transform: translate(285%, 0%);
+}
+
+.header-button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+}
+
+.expand-icon {
+    display: block;
+    width: 100%;
+}
+
+.expand-button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+}
+
+.expand-box{    
+    max-width: 700px;
+    position: relative;
+    width: 100%;
+    height: 1.2vh;
+    background-color: var(--primaryWebText);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
     margin-bottom: 20px;
-    color: #333;
+    border-radius: 0px 0px 5px 5px;
+}
+
+.expand-box:hover{
+    cursor: row-resize;
+    box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.2);
+}
+
+.header-box {
+    margin: auto;
+    max-width: 700px;
+    position: relative;
+    width: 100%;
+    height: 7vh;
+    background-color: var(--primaryOrange);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    color: var(--primaryWhite);
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .receipt-image-container {
+    border-radius: 10px;
     position: relative;
     cursor: pointer;
     overflow: hidden;
     transition: max-height 0.3s ease;
 }
 
-.original-receipt {
+.receipt-image {
     display: block;
     width: 100%;
     max-height: 200px;
     object-fit: cover;
-    border-radius: 4px;
-    margin-bottom: 20px;
+    border-radius: 5 5 0 0;
     transition: transform 0.3s ease;
 }
 
-.receipt-image-container.expanded .original-receipt {
+.receipt-image-container.expanded .receipt-image {
     max-height: none;
 }
 
@@ -38,7 +137,6 @@ h1 {
     position: absolute;
     bottom: 10px;
     right: 10px;
-    color: #fff;
     background-color: rgba(0, 0, 0, 0.5);
     padding: 5px;
     border-radius: 50%;
@@ -51,16 +149,26 @@ h1 {
     opacity: 1;
 }
 
+.receipt-items-holder{
+    display: inline-box;
+    overflow-y: scroll;
+    height: 400px;
+    background-color: var(--primaryWhite);
+    border-radius: 15px;
+    margin-bottom: 10px;
+}
+
 .receipt-items {
     list-style-type: none;
     padding: 0;
+    margin: 5px;
 }
 
 .receipt-items li {
     display: flex;
+    padding: 8px;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
 }
 
 .receipt-items input {
@@ -68,16 +176,15 @@ h1 {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    margin-right: 10px;
 }
 
 .receipt-items input:last-child {
     margin-right: 0;
 }
 
-.item-separator {
+.horizontal-line {
     border: none;
-    border-top: 2px dotted #ccc;
+    border-top: 3px solid var(--primaryBackground);
     margin: 10px 0;
 }
 
@@ -90,21 +197,21 @@ h1 {
     font-weight: bold;
 }
 
-.checkout-button {
+.share-button {
     display: block;
     width: 100%;
     padding: 12px;
-    background-color: #007bff;
-    color: #fff;
+    background-color: var(--primaryOrange);
+    color: var(--primaryWhite);
     border: none;
     border-radius: 4px;
-    font-size: 16px;
+    font-size: 25px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.checkout-button:hover {
-    background-color: #0056b3;
+.share-button:hover {
+    box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5);
 }
 
 @media screen and (max-width: 600px) {
@@ -112,17 +219,17 @@ h1 {
         padding: 10px;
     }
 
-    .original-receipt {
+    .receipt-image {
         max-height: 150px;
     }
 
     .receipt-items li {
         flex-wrap: nowrap;
+        margin-right: 5px;
     }
 
     .receipt-items input {
         flex: 1;
-        margin-right: 5px;
     }
 
     .receipt-total {
@@ -135,10 +242,18 @@ h1 {
     }
 }
 
+.receipt-items .valid {
+    border-style: solid;
+    border-width: 2px;
+    border-color: var(--plus);
+    border-radius: 10px;
+    padding: 3px;
+}
+
 .receipt-items .invalid {
     border-style: solid;
     border-width: 2px;
-    border-color: red;
+    border-color: var(--minus);
     border-radius: 10px;
     padding: 3px;
 }

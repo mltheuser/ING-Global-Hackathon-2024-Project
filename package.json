@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "react-currency-input-field": "^3.8.0",
+    "react-redux": "^9.1.0",
+    "redux": "^5.0.1",
+    "redux-thunk": "^3.1.0"
+  }
+}
