@@ -23,7 +23,7 @@ function Scanner() {
 
             console.log(imageResponse)
 
-            setReceiptData({ imageBlob: imageBlob, items: imageResponse.data.items })
+            setReceiptData({ imageSrc: URL.createObjectURL(imageBlob), items: imageResponse.data.items })
         } catch (error) {
             console.error('Error:', error.message);
         } finally {
@@ -34,20 +34,19 @@ function Scanner() {
     if (isLoading) {
         return (
             <>
+                <Snap parseReceiptImageOnServerAction={parseReceiptImageOnServer} isLoading={isLoading}/>
                 <Spinner />
-                <Snap parseReceiptImageOnServerAction={parseReceiptImageOnServer} />
             </>
         )
-    }
+    }   
     if (receiptData) {
         return <>
             <ReceiptEdit receiptData={receiptData} />
         </>
     }
     return (
-        <Snap parseReceiptImageOnServerAction={parseReceiptImageOnServer} />
+        <Snap parseReceiptImageOnServerAction={parseReceiptImageOnServer} isLoading={isLoading}/>
     )
-
 }
 
 export default Scanner;
