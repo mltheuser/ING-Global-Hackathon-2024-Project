@@ -31,7 +31,8 @@ import {
   } from "react-share";
 
 import './ShareLink.css';
-  
+import { BsCopy } from "react-icons/bs";
+
 
 function ShareLink(props) {
     const [uuid, setUuid] = useState(() => props.sharingLink);
@@ -69,7 +70,7 @@ function ShareLink(props) {
             <div className="link">
                 <h3>Share the following link: </h3>
                 <button className="copy-link" onClick={copyLink}>
-                    {getCopyButtonText()}
+                <BsCopy />{getCopyButtonText()}
                 </button>
             </div>
 
