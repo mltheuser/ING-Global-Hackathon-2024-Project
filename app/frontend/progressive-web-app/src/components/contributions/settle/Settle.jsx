@@ -6,6 +6,8 @@ import { useParams } from 'react-router-dom';
 
 function Settle() {
 
+    const [checkedOut, setCheckedOut] = useState(false)
+
     const { receiptId } = useParams();
 
     const [receiptData, setReceiptData] = useState([])
@@ -56,32 +58,40 @@ function Settle() {
             headers: {
                 'Content-Type': 'application/json'
             }
-        })
+        }).then(
+            setCheckedOut(true)
+        )
     }
 
-    return (
-        <div className="receipt-container">
-            <h1>Settle the Score</h1>
-            <div className="receipt-container">
-                <ul className="receipt-items">
-                    {receiptData.map((item, index) => (
-                        <li key={index}>
-                            <ReceiptItem
-                                item={item}
-                                options={options}
-                                onStateChange={(state) => handleItemStateChange(index, state)}
-                            />
-                        </li>
-                    ))}
-                </ul>
+    if (checkedOut) {
+        return (
+            <h1>Thank you!</h1>
+        )
+    } else {
+        return (
+            <div className="settle-page">
+                <h1>Settle the Score</h1>
+                <div className="settle-receipt-container">
+                    <ul className="receipt-items">
+                        {receiptData.map((item, index) => (
+                            <li key={index}>
+                                <ReceiptItem
+                                    item={item}
+                                    options={options}
+                                    onStateChange={(state) => handleItemStateChange(index, state)}
+                                />
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <div className="receipt-total">
+                    <span className="total-label">Total:</span>
+                    <span className="total-amount">{calculateTotalCost(itemStates)}</span>
+                </div>
+                <button onClick={() => checkout()} className="share-button pay-button">Checkout</button>
             </div>
-            <div className="receipt-total">
-                <span className="total-label">Total:</span>
-                <span className="total-amount">{calculateTotalCost(itemStates)}</span>
-            </div>
-            <button onClick={() => checkout()} className="pay">Checkout</button>
-        </div>
-    );
+        );
+    }
 }
 
 export default Settle;
