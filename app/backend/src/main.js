@@ -8,99 +8,6 @@ app.use(express.json());
 app.use(cors())
 app.use(bodyParser.json());
 
-
-class Item {
-  constructor(id, name, quantity, unit_price, total_price) {
-    this._id = id;
-    this._name = name;
-    this._quantiy = quantity;
-    this._unit_price = unit_price;
-    this._total_price = total_price;
-    this._price_paid = 0;
-    this._quantity_paid = 0;
-  }
-
-  get id() {
-    return this.id;
-  }
-
-  get name() {
-    return this._name;
-  }
-
-  get quantity() {
-    return this._quantity;
-  }
-
-  get unit_price() {
-    return this._unit_price;
-  }
-
-  get total_price() {
-    return this._total_price;
-  }
-
-  get pricePaid() {
-    return this._price_paid;
-  }
-
-  get quantityPaid() {
-    return this._quantity_paid;
-  }
-
-  get isFullyPaid() {
-    return this._price_paid == this._total_price;
-  }
-
-  get isFullyPaid() {
-    return (this._price_paid == this._total_price) ||
-      (this._quantity_paid == this._quantiy);
-  }
-
-  setQuantityPaid(quantity) {
-    this._quantity_paid += quantity;
-  }
-
-  setPricePaid(price) {
-    this._price_paid += price;
-  }
-
-  jsonify() {
-    return {
-      "id": this._id, "name": this._name, "amount": this._quantiy, "unit_price": this._unit_price, "totalPrice": this._total_price,
-      "price_paid": this._price_paid, "quantity_paid": this._quantity_paid
-    };
-  }
-}
-
-class Bill {
-  constructor(items, total) {
-    this._items = items;
-    this._total = total;
-  }
-
-  get items() {
-    return this._items;
-  }
-
-  get total() {
-    return this._total;
-  }
-
-  getItem(id) {
-    return this._items.get(id);
-  }
-
-  setItem(id, item) {
-    this._items.set(id, item)
-  }
-
-  jsonify() {
-    var item_jsons = []
-    this._items.forEach(item => item_jsons.push(item.jsonify()));
-    return { "items": item_jsons, "total": this._total };
-  }
-}
 const db = new Map();
 
 db.set("cf087d8a-7504-480e-a4ba-ccc873f5d1e7", { bill: { items: [{ name: "name", amount: 2, totalPrice: 12.5 }, { name: "name2", amount: 5, totalPrice: 22 }] } })
@@ -126,17 +33,8 @@ app.post('/bill/generate-link', (req, res) => {
   }
 
   const items = bill_json.bill;
-  const total = bill_json.total;
 
-  var items_map = new Map();
-
-  items.forEach(item => {
-    items_map.set(item.id, new Item(item.id, item.name, item.price, item.amount, item.total_price));
-  });
-
-  const new_bill = new Bill(items_map, total);
-
-  db.set(bill_uuid, new_bill);
+  db.set(bill_uuid, { bill: { items: items } });
   res.status(200).json({ message: "Bill " + bill_uuid + " created successfully.", uuid: bill_uuid });
 });
 
