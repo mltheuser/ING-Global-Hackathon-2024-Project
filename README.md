@@ -4,11 +4,11 @@ Supercharging Payment Request with Receipt Scanning Feature!!
 
 ## Demo
 
-https://github.com/mltheuser/splitING/assets/25958978/f16b0078-ab52-4420-a9e4-1a32d4cd21a2
+https://github.com/mltheuser/ING-Global-Hackathon-2024-Project/assets/25958978/44836bcc-2f7f-42dd-872e-462f6315f51b
 
 ## Team
 
-<img width=50% src="https://github.com/mltheuser/splitING/assets/25958978/103bb5ff-a3af-4309-a9d1-02de4a0e9eeb" />
+<img width=50% src="https://github.com/mltheuser/ING-Global-Hackathon-2024-Project/assets/25958978/53aa0c05-ebae-4e7d-b23c-0c96af65a61f" />
 
 ## Usage
 
